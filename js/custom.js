@@ -34,5 +34,14 @@
 			event.preventDefault();
 		});
 	});
+	
+	//jQuery function that enables resizable iframes
+	$(function () {
+		$(".resizable").resizable({
+			animate: true,
+			animateEasing: 'swing',
+			imateDuration: 500
+		});
+	});
 
 })(jQuery);

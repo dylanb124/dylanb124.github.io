@@ -443,6 +443,19 @@ hr {
 --- Contact
 ============================ */
 
+div#bot {
+	
+	text-align: left !important;
+	display: block;
+	
+}
+
+iframe#botframe {
+	
+	height: 300px;
+	width: 100%;
+}
+
 form#contact-form .form-group label {
 	text-align: left !important;
 	display: block;
