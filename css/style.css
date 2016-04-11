@@ -39,8 +39,9 @@ p.lead {
 	font-weight: 600;
 }
 
-a {
-    color: #28c3ab;
+a:link,
+a:visited {
+    color: #1b8473;
     -webkit-transition: all .2s ease-in-out;
     -moz-transition: all .2s ease-in-out;
     transition: all .2s ease-in-out;
