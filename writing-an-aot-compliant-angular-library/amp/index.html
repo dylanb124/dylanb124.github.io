@@ -1,0 +1,353 @@
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Writing an AOT Compliant Angular Library</title>
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+
+    <link rel="shortcut icon" href="../../favicon.ico">
+
+    <meta name="description" content="Learn how to get an AOT Angular service library up and running with minimal effort. Full code examples and step by step tutorials included.">
+    <link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon">
+    <link rel="canonical" href="../index.html">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    
+    <meta property="og:site_name" content="Dylan Barnes' Blog">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Writing an AOT Compliant Angular Library">
+    <meta property="og:description" content="Learn how to get an AOT Angular service library up and running with minimal effort. Full code examples and step by step tutorials included.">
+    <meta property="og:url" content="http://localhost:2368/writing-an-aot-compliant-angular-library/">
+    <meta property="og:image" content="http://localhost:2368/content/images/2018/03/angular2-library-example-code-1.png">
+    <meta property="article:published_time" content="2017-03-19T21:36:20.000Z">
+    <meta property="article:modified_time" content="2018-03-18T16:50:16.000Z">
+    <meta property="article:tag" content="AOT">
+    <meta property="article:tag" content="npm">
+    <meta property="article:tag" content="library">
+    <meta property="article:tag" content="service">
+    <meta property="article:tag" content="angular">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Writing an AOT Compliant Angular Library">
+    <meta name="twitter:description" content="Learn how to get an AOT Angular service library up and running with minimal effort. Full code examples and step by step tutorials included.">
+    <meta name="twitter:url" content="http://localhost:2368/writing-an-aot-compliant-angular-library/">
+    <meta name="twitter:image" content="http://localhost:2368/content/images/2018/03/angular2-library-example-code-1.png">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Dylan Barnes">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="AOT, npm, library, service, angular">
+    <meta property="og:image:width" content="1907">
+    <meta property="og:image:height" content="709">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Dylan Barnes&#x27; Blog",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "http://localhost:2368/favicon.ico",
+            "width": 60,
+            "height": 60
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Dylan Barnes",
+        "image": {
+            "@type": "ImageObject",
+            "url": "//www.gravatar.com/avatar/7ef4fefcd783f98a0303122637bad57a?s=250&d=mm&r=x",
+            "width": 250,
+            "height": 250
+        },
+        "url": "http://localhost:2368/author/dylan/",
+        "sameAs": []
+    },
+    "headline": "Writing an AOT Compliant Angular Library",
+    "url": "http://localhost:2368/writing-an-aot-compliant-angular-library/",
+    "datePublished": "2017-03-19T21:36:20.000Z",
+    "dateModified": "2018-03-18T16:50:16.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "http://localhost:2368/content/images/2018/03/angular2-library-example-code-1.png",
+        "width": 1907,
+        "height": 709
+    },
+    "keywords": "AOT, npm, library, service, angular",
+    "description": "Learn how to get an AOT Angular service library up and running with minimal effort. Full code examples and step by step tutorials included.",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "http://localhost:2368/"
+    }
+}
+    </script>
+
+    <meta name="generator" content="Ghost 1.21">
+    <link rel="alternate" type="application/rss+xml" title="Dylan Barnes' Blog" href="../../rss/index.html">
+
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic%7COpen+Sans:700,600,400">
+    <style amp-custom>html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}body{margin:0}article,aside,details,figcaption,figure,footer,header,main,menu,nav,section,summary{display:block}audio,canvas,progress,video{display:inline-block;vertical-align:baseline}audio:not([controls]){display:none;height:0}[hidden],template{display:none}a{background-color:transparent}a:active,a:hover{outline:0}abbr[title]{border-bottom:1px dotted}b,strong{font-weight:bold}dfn{font-style:italic}h1{margin:0.67em 0;font-size:2em}mark{background:#ff0;color:#000}small{font-size:80%}sub,sup{position:relative;vertical-align:baseline;font-size:75%;line-height:0}sup{top:-0.5em}sub{bottom:-0.25em}img{border:0}amp-img{border:0}svg:not(:root){overflow:hidden}figure{margin:1em 40px}hr{box-sizing:content-box;height:0}pre{overflow:auto}code,kbd,pre,samp{font-family:monospace, monospace;font-size:1em}button,input,optgroup,select,textarea{margin:0;color:inherit;font:inherit}button{overflow:visible}button,select{text-transform:none}button,html input[type="button"],input[type="reset"],input[type="submit"]{cursor:pointer;-webkit-appearance:button}button[disabled],html input[disabled]{cursor:default}button::-moz-focus-inner,input::-moz-focus-inner{padding:0;border:0}input{line-height:normal}input[type="checkbox"],input[type="radio"]{box-sizing:border-box;padding:0}input[type="number"]::-webkit-inner-spin-button,input[type="number"]::-webkit-outer-spin-button{height:auto}input[type="search"]{-webkit-appearance:textfield}input[type="search"]::-webkit-search-cancel-button,input[type="search"]::-webkit-search-decoration{-webkit-appearance:none}fieldset{margin:0 2px;padding:0.35em 0.625em 0.75em;border:1px solid #c0c0c0}legend{padding:0;border:0}textarea{overflow:auto}optgroup{font-weight:bold}table{border-spacing:0;border-collapse:collapse}td,th{padding:0}html{max-height:100%;height:100%;font-size:62.5%;-webkit-tap-highlight-color:rgba(0, 0, 0, 0)}body{max-height:100%;height:100%;color:#3a4145;background:#f4f8fb;letter-spacing:0.01rem;font-family:"Merriweather", serif;font-size:1.8rem;line-height:1.75em;text-rendering:geometricPrecision;-webkit-font-feature-settings:"kern" 1;-moz-font-feature-settings:"kern" 1;-o-font-feature-settings:"kern" 1}::-moz-selection{background:#d6edff}::selection{background:#d6edff}h1,h2,h3,h4,h5,h6{margin:0 0 0.3em 0;color:#2e2e2e;font-family:"Open Sans", sans-serif;line-height:1.15em;text-rendering:geometricPrecision;-webkit-font-feature-settings:"dlig" 1, "liga" 1, "lnum" 1, "kern" 1;-moz-font-feature-settings:"dlig" 1, "liga" 1, "lnum" 1, "kern" 1;-o-font-feature-settings:"dlig" 1, "liga" 1, "lnum" 1, "kern" 1}h1{text-indent:-2px;letter-spacing:-1px;font-size:2.6rem}h2{letter-spacing:0;font-size:2.4rem}h3{letter-spacing:-0.6px;font-size:2.1rem}h4{font-size:1.9rem}h5{font-size:1.8rem}h6{font-size:1.8rem}a{color:#4a4a4a}a:hover{color:#111}p,ul,ol,dl{margin:0 0 2.5rem 0;font-size:1.5rem;text-rendering:geometricPrecision;-webkit-font-feature-settings:"liga" 1, "onum" 1, "kern" 1;-moz-font-feature-settings:"liga" 1, "onum" 1, "kern" 1;-o-font-feature-settings:"liga" 1, "onum" 1, "kern" 1}ol,ul{padding-left:2em}ol ol,ul ul,ul ol,ol ul{margin:0 0 0.4em 0;padding-left:2em}dl dt{float:left;clear:left;overflow:hidden;margin-bottom:1em;width:180px;text-align:right;text-overflow:ellipsis;white-space:nowrap;font-weight:700}dl dd{margin-bottom:1em;margin-left:200px}li{margin:0.4em 0}li li{margin:0}hr{display:block;margin:1.75em 0;padding:0;height:1px;border:0;border-top:#efefef 1px solid}blockquote{box-sizing:border-box;margin:1.75em 0 1.75em 0;padding:0 0 0 1.75em;border-left:#4a4a4a 0.4em solid;-moz-box-sizing:border-box}blockquote p{margin:0.8em 0;font-style:italic}blockquote small{display:inline-block;margin:0.8em 0 0.8em 1.5em;color:#ccc;font-size:0.9em}blockquote small:before{content:"\2014 \00A0"}blockquote cite{font-weight:700}blockquote cite a{font-weight:normal}mark{background-color:#fdffb6}code,tt{padding:1px 3px;border:#e3edf3 1px solid;background:#f7fafb;border-radius:2px;white-space:pre-wrap;font-family:Inconsolata, monospace, sans-serif;font-size:0.85em;font-feature-settings:"liga" 0;-webkit-font-feature-settings:"liga" 0;-moz-font-feature-settings:"liga" 0}pre{overflow:auto;box-sizing:border-box;margin:0 0 1.75em 0;padding:10px;width:100%;border:#e3edf3 1px solid;background:#f7fafb;border-radius:3px;white-space:pre;font-family:Inconsolata, monospace, sans-serif;font-size:0.9em;-moz-box-sizing:border-box}pre code,pre tt{padding:0;border:none;background:transparent;white-space:pre-wrap;font-size:inherit}kbd{display:inline-block;margin-bottom:0.4em;padding:1px 8px;border:#ccc 1px solid;background:#f4f4f4;border-radius:4px;box-shadow:0 1px 0 rgba(0, 0, 0, 0.2), 0 1px 0 0 #fff inset;color:#666;text-shadow:#fff 0 1px 0;font-size:0.9em;font-weight:700}table{box-sizing:border-box;margin:1.75em 0;max-width:100%;width:100%;background-color:transparent;-moz-box-sizing:border-box}table th,table td{padding:8px;border-top:#efefef 1px solid;vertical-align:top;text-align:left;line-height:20px}table th{color:#000}table caption + thead tr:first-child th,table caption + thead tr:first-child td,table colgroup + thead tr:first-child th,table colgroup + thead tr:first-child td,table thead:first-child tr:first-child th,table thead:first-child tr:first-child td{border-top:0}table tbody + tbody{border-top:#efefef 2px solid}table table table{background-color:#fff}table tbody > tr:nth-child(odd) > td,table tbody > tr:nth-child(odd) > th{background-color:#f6f6f6}table.plain tbody > tr:nth-child(odd) > td,table.plain tbody > tr:nth-child(odd) > th{background:transparent}iframe,amp-iframe,.fluid-width-video-wrapper{display:block;margin:1.75em 0}.fluid-width-video-wrapper iframe,.fluid-width-video-wrapper amp-iframe{margin:0}textarea,select,input{margin:0 0 5px 0;padding:6px 9px;width:260px;outline:0;border:#e7eef2 1px solid;background:#fff;border-radius:4px;box-shadow:none;font-family:"Open Sans", sans-serif;font-size:1.6rem;line-height:1.4em;font-weight:100;-webkit-appearance:none}textarea{min-width:250px;min-height:80px;max-width:340px;width:100%;height:auto}input[type="text"]:focus,input[type="email"]:focus,input[type="search"]:focus,input[type="tel"]:focus,input[type="url"]:focus,input[type="password"]:focus,input[type="number"]:focus,input[type="date"]:focus,input[type="month"]:focus,input[type="week"]:focus,input[type="time"]:focus,input[type="datetime"]:focus,input[type="datetime-local"]:focus,textarea:focus{outline:none;outline-width:0;border:#bbc7cc 1px solid;background:#fff}select{width:270px;height:30px;line-height:30px}.clearfix:before,.clearfix:after{content:" ";display:table}.clearfix:after{clear:both}.clearfix{zoom:1}.main-header{position:relative;display:table;overflow:hidden;box-sizing:border-box;width:100%;height:50px;background:#5ba4e5 no-repeat center center;background-size:cover;text-align:left;-webkit-box-sizing:border-box;-moz-box-sizing:border-box}.content{background:#fff;padding-top:15px}.blog-title,.content{margin:auto;max-width:600px}.blog-title a{display:block;padding-right:16px;padding-left:16px;height:50px;color:#fff;text-decoration:none;font-family:"Open Sans", sans-serif;font-size:16px;line-height:50px;font-weight:600}.post{position:relative;margin-top:0;margin-right:16px;margin-left:16px;padding-bottom:0;max-width:100%;border-bottom:#ebf2f6 1px solid;word-wrap:break-word;font-size:0.95em;line-height:1.65em}.post-header{margin-bottom:1rem}.post-title{margin-bottom:0}.post-title a{text-decoration:none}.post-meta{display:block;margin:3px 0 0 0;color:#9eabb3;font-family:"Open Sans", sans-serif;font-size:1.3rem;line-height:2.2rem}.post-meta a{color:#9eabb3;text-decoration:none}.post-meta a:hover{text-decoration:underline}.post-meta .author{margin:0;font-size:1.3rem;line-height:1.3em}.post-date{display:inline-block;text-transform:uppercase;white-space:nowrap;font-size:1.2rem;line-height:1.2em}.post-image{margin:0;padding-top:3rem;padding-bottom:30px;border-top:1px #E8E8E8 solid}.post-content amp-img,.post-content amp-anim{position:relative;left:50%;display:block;padding:0;min-width:0;max-width:112%;width:calc(100% + 32px);height:auto;transform:translateX(-50%);-webkit-transform:translateX(-50%);-ms-transform:translateX(-50%)}.footnotes{font-size:1.3rem;line-height:1.6em;font-style:italic}.footnotes li{margin:0.6rem 0}.footnotes p{margin:0}.footnotes p a:last-child{text-decoration:none}.site-footer{position:relative;margin:0 auto 20px auto;padding:1rem 15px;max-width:600px;color:rgba(0,0,0,0.5);font-family:"Open Sans", sans-serif;font-size:1.1rem;line-height:1.75em}.site-footer a{color:rgba(0,0,0,0.5);text-decoration:none;font-weight:bold}.site-footer a:hover{border-bottom:#bbc7cc 1px solid}.poweredby{display:block;float:right;width:45%;text-align:right}.copyright{display:block;float:left;width:45%}</style>
+
+    <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+
+    
+
+</head>
+
+<body class="amp-template">
+    <header class="main-header">
+        <nav class="blog-title">
+            <a href="../../">Dylan Barnes' Blog</a>
+        </nav>
+    </header>
+
+    <main class="content" role="main">
+        <article class="post">
+
+            <header class="post-header">
+                <h1 class="post-title">Writing an AOT Compliant Angular Library</h1>
+                <section class="post-meta">
+                    <p class="author">by <a href="../../author/dylan/">Dylan Barnes</a></p>
+                    <time class="post-date" datetime="2017-03-19">2017-03-19</time>
+                </section>
+            </header>
+            <figure class="post-image">
+                <amp-img src="http://localhost:2368/content/images/2018/03/angular2-library-example-code-1.png" width="600" height="400" layout="responsive"></amp-img>
+            </figure>
+            <section class="post-content">
+
+                <div class="kg-card-markdown"><p>As the use of Angular expands in my workplace, I find myself delving deeper into the corners of the Angular framework. Recently, this happened to be library development. To my surprise, there seemed to be a lack of relevant material on the subject, which led to a lot of digging and experimentation. The following write up details my experience, which I hope will prove useful to others as they attempt to tackle library development.</p>
+<h3 id="background">Background</h3>
+<p>Let's take a step back. Why did I find the need to create my own libraries, and why must it be AOT compliant? What is "AOT compliance", and why should anyone care?</p>
+<h4 id="standardizewithlibraries">Standardize with libraries</h4>
+<p>In our workplace, we have 4 developers working in the Angular realm, with varying levels of experience. Up until this point, shared services and components have been passed around from person to person in crude file sharing methods. As changes are made to different versions of the library, we end up with vastly different variations of what was originally the same library. This also makes it difficult to find the "latest" version of the library.</p>
+<p>To solve this, I created a private, IP secure <a href="https://www.npmjs.com/">NPM</a> repository using <a href="https://github.com/verdaccio/verdaccio">Verdaccio</a>. This repository would serve as the home of our company's libraries. As long as all developers agree to use this NPM repository as the source of truth, we can successfully control what changes to the library are published and used in production applications. This has the added benefit of making it very simple to install and use these libraries through NPM.</p>
+<h4 id="aotcompliance">AOT Compliance</h4>
+<p>AOT stands for <strong>A</strong>head <strong>O</strong>f <strong>T</strong>ime compilation. Without going into too much detail, AOT compilation has the following benefits:</p>
+<ol>
+<li>
+<p><strong>Less code generated in the production bundle.</strong> A compiler is not included in the output, and tree-shaking reduces unneeded dependencies.</p>
+</li>
+<li>
+<p><strong>Faster rendering.</strong> This means a faster application for the end user.</p>
+</li>
+<li>
+<p><strong>Compile time syntax checking.</strong> Various template errors will be caught at compile time instead of run time.</p>
+</li>
+<li>
+<p><strong>Improved Security.</strong> Since templates are compiled ahead of time, there is less room for HTML injection.</p>
+</li>
+</ol>
+<p>Due to all of these benefits, the majority of our newer applications utilize AOT compilation. When an application compiles ahead of time, all libraries used by the app must also be AOT compliant. Thus, this became a requirement for any library I was going to make.</p>
+<h3 id="librarydevelopment">Library Development</h3>
+<p>Now, with a better understanding of the topic, we will transition into the instructional portion of this post. I will walk you step by step through creating a library that will successfully compile with an AOT compliant application. Let's get started.</p>
+<h4 id="examplecode">Example Code</h4>
+<p>The instructions to follow have been replicated and uploaded to Github repositories for those that learn better by having a complete example (myself included). Refer to the commit history if you'd like to follow along.</p>
+<p>Angular Library Example:<br>
+<a href="https://github.com/dylanb124/angular2-library-example">https://github.com/dylanb124/angular2-library-example</a></p>
+<p>Angular Client App Example:<br>
+<a href="https://github.com/dylanb124/angular2-client-app-example">https://github.com/dylanb124/angular2-client-app-example</a></p>
+<h4 id="scaffoldingwithyeoman">Scaffolding with Yeoman</h4>
+<p>To avoid having to self-maintain my own library template, I use the <a href="https://github.com/jvandemo/generator-angular2-library">Yeoman Angular Library Generator</a>.</p>
+<p>[<amp-img src="https://cloud.githubusercontent.com/assets/1859381/24447242/901c8a1a-1470-11e7-8b55-2484b7825722.jpg" alt="Yeoman generator for Angular library" width="888" height="421" layout="responsive"></amp-img><br>
+Follow the excellent instructions provided on the github page for the generator in order to get it installed and generate a source controlled library. While this gets us 90% of the way there, I have made some of my own modifications to the generated library in support of AOT compilation, which I will detail below.</p>
+<h5 id="filecleanup">File Cleanup</h5>
+<p>Depending on the type of library you are making, you will most likely want to delete some of the example files. In this tutorial, I am going to be creating a service library. I will be keeping the <code>sample.service.ts</code> file, and deleting <code>sample.component.ts</code>, <code>sample.directive.ts</code>, and <code>sample.pipe.ts</code>.</p>
+<p>Once you have removed the example files you won't be using, you will have to remove the imports from <code>index.ts</code>.</p>
+<pre><code class="language-typescript">import { NgModule, ModuleWithProviders } from '@angular/core';
+import { CommonModule } from '@angular/common';
+// import { SampleComponent } from './src/sample.component';
+// import { SampleDirective } from './src/sample.directive';
+// import { SamplePipe } from './src/sample.pipe';
+import { SampleService } from './src/sample.service';
+
+// export * from './src/sample.component';
+// export * from './src/sample.directive';
+// export * from './src/sample.pipe';
+export * from './src/sample.service';
+
+@NgModule({
+  imports: [
+    CommonModule
+  ],
+  // declarations: [
+  //  SampleComponent,
+  //  SampleDirective,
+  //  SamplePipe
+  // ],
+  // exports: [
+  //  SampleComponent,
+  //  SampleDirective,
+  //  SamplePipe
+  // ]
+})
+export class SampleModule {
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: SampleModule,
+      providers: [SampleService]
+    };
+  }
+}
+
+</code></pre>
+<h5 id="configurationchanges">Configuration Changes</h5>
+<p>Since we are making the library AOT compliant, there are a few changes we can implement to make development go smoother.</p>
+<p>First, add the following to the bottom of <code>tsconfig.json</code>:</p>
+<pre><code class="language-typescript">"angularCompilerOptions": {
+  "strictMetadataEmit": true,
+  "genDir": "compiled"
+}
+</code></pre>
+<p>This will output AOT specific files to a <code>compiled</code> folder, which you will want to create in the project root directory. The files generated in this folder should end with a <code>ngsummary.json</code> extension.</p>
+<p>However, there's no need to track these files in our Git repo, so we will want to add the following to <code>.gitignore</code>.</p>
+<pre><code class="language-typescript"># Ignore AOT generated files
+*.ngsummary.json
+</code></pre>
+<p>In addition to this, we will want to add the same to <code>.npmignore</code> to ensure summary files are not published to the NPM repository either. While you are here, you may find it useful to exclude lint files as well.</p>
+<pre><code class="language-typescript"># Ignore AOT generated files
+*.ngsummary.json
+
+# Ignore linting
+tslint.json
+</code></pre>
+<p>Feel free to make changes to <code>package.json</code> and <code>README.MD</code> at this point to reflect application specific information. However, this is entirely optional.</p>
+<h5 id="testupdates">Test Updates</h5>
+<p>At this point, you'll want to make sure the changes you have made are working as expected.</p>
+<ol>
+<li>
+<p><strong>Build the application with the typescript compiler.</strong> Run the following command in the command line: <code>npm run tsc</code>. You should now have new files in the <code>dist</code> folder.</p>
+</li>
+<li>
+<p><strong>Build the application with the AOT compiler.</strong> Run the following command in the command line: <code>npm run build</code>. You should now have new files in the <code>compiled</code> folder.</p>
+</li>
+</ol>
+<p>If you had any compilation errors, you will want to review the instructions up to this point and ensure you have followed the steps properly. If you are unable to resolve your issue, please feel free to leave a comment and I will do my best to assist you.</p>
+<h3 id="serviceparameters">Service Parameters</h3>
+<p>This section will prove useful to libraries that provide a service and require arguments from the calling application.</p>
+<h4 id="library">Library</h4>
+<p>To start with, we will have to expose a parameter for the parent application to use. If we want our library to be AOT compliant, we will need to expose this as a function in <code>index.ts</code>:</p>
+<pre><code class="language-typescript">export class SampleModule {
+  static forRoot(getConfig: Function): ModuleWithProviders {
+    return {
+      ngModule: SampleModule,
+      providers: [
+        { provide: 'config', useFactory: getConfig },
+        SampleService
+      ]
+    };
+  }
+}
+</code></pre>
+<p>This <code>config</code> value may now be accessed through dependency injection anywhere in the library. For example, in <code>sample.service.ts</code>:</p>
+<pre><code class="language-typescript">import { Inject, Injectable } from '@angular/core';
+
+@Injectable()
+export class SampleService {
+
+  constructor(@Inject('config') private config: string) {
+    console.log(this.config);
+  }
+}
+</code></pre>
+<p>In real usage, the config variable would be typed as a custom interface or class containing the configurable properties. However, I am using a string for the sake of simplicity.</p>
+<h5 id="clientapplication">Client Application</h5>
+<p>Now that we have exposed the parameters, we need to figure out how to pass configuration values from the client application. For my example, I will be generating an app using the popular CLI tool, <a href="https://github.com/angular/angular-cli">Angular CLI</a>.</p>
+<p>First, we need to package up our library so we can use it in other applications. I would suggest locally packaging the file, as opposed to publishing it to an NPM repository.</p>
+<pre><code class="language-bash">npm pack
+</code></pre>
+<p>This should generate a file called <code>[LIBRARY_NAME]-[LIBRARY_VERSION].tgz</code>. I suggest moving this file to the project directory of your client application.</p>
+<p>Now that we have the library packaged up, we can install it from the project directory of our client application using the following command:</p>
+<pre><code class="language-bash">npm install [LIBRARY_NAME]-[LIBRARY_VERSION].tgz
+</code></pre>
+<p>Once installed, the library can be imported into <code>app.module.ts</code>, the same place where we will pass our configuration arguments to the library service.</p>
+<pre><code class="language-typescript">import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
+
+import { AppComponent } from './app.component';
+import { SampleModule } from 'angular2-library-example';
+
+export function createConfig(): string {
+  return 'Config injection successful!';
+}
+
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpModule,
+    SampleModule.forRoot(createConfig)
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+</code></pre>
+<p>We can then inject the service in any component we like, such as <code>app.component.ts</code>.</p>
+<pre><code class="language-typescript">import { Component } from '@angular/core';
+import { SampleService } from 'angular2-library-example';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  title = 'app works!';
+
+  // Inject sample serivce
+  constructor(private sampleService: SampleService) {
+
+  }
+}
+</code></pre>
+<p>If all works as planned, you should be able to AOT build and run the application, receiving the following message in the browser console:</p>
+<pre><code>Config injection successful!
+</code></pre>
+<p><strong>Note:</strong> If you are using Angular CLI, you may build and run your application by issuing the <code>ng serve --aot</code> command from your project root directory.</p>
+<h3 id="publishyourlibrary">Publish Your Library</h3>
+<p>There's a high probability that you'll want to eventually publish this library to either the public NPM repository or to a private NPM repository. Luckily for you, NPM makes this very easy to do.</p>
+<h6 id="public">Public</h6>
+<p>Ensure your <code>package.json</code> file of your library is configured appropriately, and run the following in the command line:</p>
+<pre><code class="language-bash">npm publish
+</code></pre>
+<h5 id="private">Private</h5>
+<p>Append to the bottom of your <code>package.json</code> file the private repository which you wish to publish to:</p>
+<pre><code class="language-json">"publishConfig": {
+  "registry": "http://MY-REPO-URL/"
+}
+</code></pre>
+<p>And then perform the following in the command line:</p>
+<pre><code class="language-bash">npm config set registry &lt;registry url&gt;
+npm login
+npm publish
+</code></pre>
+<h3 id="summary">Summary</h3>
+<p>After reading this blog post, you should be able to accomplish the following:</p>
+<ol>
+<li>Create an Angular library using a template generator</li>
+<li>Implement an AOT compatible service in the library that accepts arguments</li>
+<li>Successfully install and use your library in any Angular application</li>
+<li>Publish the library to an NPM repository</li>
+</ol>
+<p>Thank you for reading. If you'd like to leave feedback or have any questions, please feel free to leave a comment and I'll get back to you promptly.</p>
+</div>
+
+            </section>
+
+        </article>
+    </main>
+    <footer class="site-footer clearfix">
+        <section class="copyright"><a href="../../">Dylan Barnes' Blog</a> © 2018</section>
+        <section class="poweredby">Proudly published with <a href="https://ghost.org">Ghost</a></section>
+    </footer>
+</body>
