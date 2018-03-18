@@ -1,0 +1,542 @@
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Writing an AOT Compliant Angular Library</title>
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" type="text/css" href="../assets/built/screen.css?v=a5a2724bdf">
+
+    <meta name="description" content="Learn how to get an AOT Angular service library up and running with minimal effort. Full code examples and step by step tutorials included.">
+    <link rel="shortcut icon" href="../favicon.ico" type="image/x-icon">
+    <link rel="canonical" href="index.html">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <link rel="amphtml" href="amp/index.html">
+    
+    <meta property="og:site_name" content="Dylan Barnes' Blog">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Writing an AOT Compliant Angular Library">
+    <meta property="og:description" content="Learn how to get an AOT Angular service library up and running with minimal effort. Full code examples and step by step tutorials included.">
+    <meta property="og:url" content="http://localhost:2368/writing-an-aot-compliant-angular-library/">
+    <meta property="og:image" content="http://localhost:2368/content/images/2018/03/angular2-library-example-code-1.png">
+    <meta property="article:published_time" content="2017-03-19T21:36:20.000Z">
+    <meta property="article:modified_time" content="2018-03-18T16:50:16.000Z">
+    <meta property="article:tag" content="AOT">
+    <meta property="article:tag" content="npm">
+    <meta property="article:tag" content="library">
+    <meta property="article:tag" content="service">
+    <meta property="article:tag" content="angular">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Writing an AOT Compliant Angular Library">
+    <meta name="twitter:description" content="Learn how to get an AOT Angular service library up and running with minimal effort. Full code examples and step by step tutorials included.">
+    <meta name="twitter:url" content="http://localhost:2368/writing-an-aot-compliant-angular-library/">
+    <meta name="twitter:image" content="http://localhost:2368/content/images/2018/03/angular2-library-example-code-1.png">
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Dylan Barnes">
+    <meta name="twitter:label2" content="Filed under">
+    <meta name="twitter:data2" content="AOT, npm, library, service, angular">
+    <meta property="og:image:width" content="1907">
+    <meta property="og:image:height" content="709">
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Dylan Barnes&#x27; Blog",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "http://localhost:2368/favicon.ico",
+            "width": 60,
+            "height": 60
+        }
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Dylan Barnes",
+        "image": {
+            "@type": "ImageObject",
+            "url": "//www.gravatar.com/avatar/7ef4fefcd783f98a0303122637bad57a?s=250&d=mm&r=x",
+            "width": 250,
+            "height": 250
+        },
+        "url": "http://localhost:2368/author/dylan/",
+        "sameAs": []
+    },
+    "headline": "Writing an AOT Compliant Angular Library",
+    "url": "http://localhost:2368/writing-an-aot-compliant-angular-library/",
+    "datePublished": "2017-03-19T21:36:20.000Z",
+    "dateModified": "2018-03-18T16:50:16.000Z",
+    "image": {
+        "@type": "ImageObject",
+        "url": "http://localhost:2368/content/images/2018/03/angular2-library-example-code-1.png",
+        "width": 1907,
+        "height": 709
+    },
+    "keywords": "AOT, npm, library, service, angular",
+    "description": "Learn how to get an AOT Angular service library up and running with minimal effort. Full code examples and step by step tutorials included.",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "http://localhost:2368/"
+    }
+}
+    </script>
+
+    <script type="text/javascript" src="../public/ghost-sdk.js?v=a5a2724bdf"></script>
+<script type="text/javascript">
+ghost.init({
+	clientId: "ghost-frontend",
+	clientSecret: "7ef804f92f04"
+});
+</script>
+    <meta name="generator" content="Ghost 1.21">
+    <link rel="alternate" type="application/rss+xml" title="Dylan Barnes' Blog" href="../rss/index.html">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-96529656-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-96529656-2');
+</script>
+<meta name="google-site-verification" content="sSYbyC7hS9ZoPC3vb-nca-Kv20ZufAq8jQ_x5au8hKs">
+
+</head>
+<body class="post-template tag-aot tag-npm tag-library tag-service tag-angular">
+
+    <div class="site-wrapper">
+
+        
+
+<header class="site-header outer">
+    <div class="inner">
+        <nav class="site-nav">
+    <div class="site-nav-left">
+                <a class="site-nav-logo" href="../">Dylan Barnes' Blog</a>
+            <ul class="nav" role="menu">
+    <li class="nav-home" role="menuitem"><a href="../">Home</a></li>
+</ul>
+
+    </div>
+    <div class="site-nav-right">
+        <div class="social-links">
+        </div>
+            <a class="rss-button" href="https://feedly.com/i/subscription/feed/http://localhost:2368/rss/" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24"><circle cx="6.18" cy="17.82" r="2.18"></circle><path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"></path></svg>
+</a>
+    </div>
+</nav>
+    </div>
+</header>
+
+
+<main id="site-main" class="site-main outer" role="main">
+    <div class="inner">
+
+        <article class="post-full post tag-aot tag-npm tag-library tag-service tag-angular ">
+
+            <header class="post-full-header">
+                <section class="post-full-meta">
+                    <time class="post-full-meta-date" datetime="2017-03-19">19 March 2017</time>
+                        <span class="date-divider">/</span> <a href="../tag/aot/">AOT</a>
+                </section>
+                <h1 class="post-full-title">Writing an AOT Compliant Angular Library</h1>
+            </header>
+
+            <figure class="post-full-image" style="background-image: url(../content/images/2018/03/angular2-library-example-code-1.png)">
+            </figure>
+
+            <section class="post-full-content">
+                <div class="kg-card-markdown"><p>As the use of Angular expands in my workplace, I find myself delving deeper into the corners of the Angular framework. Recently, this happened to be library development. To my surprise, there seemed to be a lack of relevant material on the subject, which led to a lot of digging and experimentation. The following write up details my experience, which I hope will prove useful to others as they attempt to tackle library development.</p>
+<h3 id="background">Background</h3>
+<p>Let's take a step back. Why did I find the need to create my own libraries, and why must it be AOT compliant? What is "AOT compliance", and why should anyone care?</p>
+<h4 id="standardizewithlibraries">Standardize with libraries</h4>
+<p>In our workplace, we have 4 developers working in the Angular realm, with varying levels of experience. Up until this point, shared services and components have been passed around from person to person in crude file sharing methods. As changes are made to different versions of the library, we end up with vastly different variations of what was originally the same library. This also makes it difficult to find the "latest" version of the library.</p>
+<p>To solve this, I created a private, IP secure <a href="https://www.npmjs.com/">NPM</a> repository using <a href="https://github.com/verdaccio/verdaccio">Verdaccio</a>. This repository would serve as the home of our company's libraries. As long as all developers agree to use this NPM repository as the source of truth, we can successfully control what changes to the library are published and used in production applications. This has the added benefit of making it very simple to install and use these libraries through NPM.</p>
+<h4 id="aotcompliance">AOT Compliance</h4>
+<p>AOT stands for <strong>A</strong>head <strong>O</strong>f <strong>T</strong>ime compilation. Without going into too much detail, AOT compilation has the following benefits:</p>
+<ol>
+<li>
+<p><strong>Less code generated in the production bundle.</strong> A compiler is not included in the output, and tree-shaking reduces unneeded dependencies.</p>
+</li>
+<li>
+<p><strong>Faster rendering.</strong> This means a faster application for the end user.</p>
+</li>
+<li>
+<p><strong>Compile time syntax checking.</strong> Various template errors will be caught at compile time instead of run time.</p>
+</li>
+<li>
+<p><strong>Improved Security.</strong> Since templates are compiled ahead of time, there is less room for HTML injection.</p>
+</li>
+</ol>
+<p>Due to all of these benefits, the majority of our newer applications utilize AOT compilation. When an application compiles ahead of time, all libraries used by the app must also be AOT compliant. Thus, this became a requirement for any library I was going to make.</p>
+<h3 id="librarydevelopment">Library Development</h3>
+<p>Now, with a better understanding of the topic, we will transition into the instructional portion of this post. I will walk you step by step through creating a library that will successfully compile with an AOT compliant application. Let's get started.</p>
+<h4 id="examplecode">Example Code</h4>
+<p>The instructions to follow have been replicated and uploaded to Github repositories for those that learn better by having a complete example (myself included). Refer to the commit history if you'd like to follow along.</p>
+<p>Angular Library Example:<br>
+<a href="https://github.com/dylanb124/angular2-library-example">https://github.com/dylanb124/angular2-library-example</a></p>
+<p>Angular Client App Example:<br>
+<a href="https://github.com/dylanb124/angular2-client-app-example">https://github.com/dylanb124/angular2-client-app-example</a></p>
+<h4 id="scaffoldingwithyeoman">Scaffolding with Yeoman</h4>
+<p>To avoid having to self-maintain my own library template, I use the <a href="https://github.com/jvandemo/generator-angular2-library">Yeoman Angular Library Generator</a>.</p>
+<p>[<img src="https://cloud.githubusercontent.com/assets/1859381/24447242/901c8a1a-1470-11e7-8b55-2484b7825722.jpg" alt="Yeoman generator for Angular library"><br>
+Follow the excellent instructions provided on the github page for the generator in order to get it installed and generate a source controlled library. While this gets us 90% of the way there, I have made some of my own modifications to the generated library in support of AOT compilation, which I will detail below.</p>
+<h5 id="filecleanup">File Cleanup</h5>
+<p>Depending on the type of library you are making, you will most likely want to delete some of the example files. In this tutorial, I am going to be creating a service library. I will be keeping the <code>sample.service.ts</code> file, and deleting <code>sample.component.ts</code>, <code>sample.directive.ts</code>, and <code>sample.pipe.ts</code>.</p>
+<p>Once you have removed the example files you won't be using, you will have to remove the imports from <code>index.ts</code>.</p>
+<pre><code class="language-typescript">import { NgModule, ModuleWithProviders } from '@angular/core';
+import { CommonModule } from '@angular/common';
+// import { SampleComponent } from './src/sample.component';
+// import { SampleDirective } from './src/sample.directive';
+// import { SamplePipe } from './src/sample.pipe';
+import { SampleService } from './src/sample.service';
+
+// export * from './src/sample.component';
+// export * from './src/sample.directive';
+// export * from './src/sample.pipe';
+export * from './src/sample.service';
+
+@NgModule({
+  imports: [
+    CommonModule
+  ],
+  // declarations: [
+  //  SampleComponent,
+  //  SampleDirective,
+  //  SamplePipe
+  // ],
+  // exports: [
+  //  SampleComponent,
+  //  SampleDirective,
+  //  SamplePipe
+  // ]
+})
+export class SampleModule {
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: SampleModule,
+      providers: [SampleService]
+    };
+  }
+}
+
+</code></pre>
+<h5 id="configurationchanges">Configuration Changes</h5>
+<p>Since we are making the library AOT compliant, there are a few changes we can implement to make development go smoother.</p>
+<p>First, add the following to the bottom of <code>tsconfig.json</code>:</p>
+<pre><code class="language-typescript">"angularCompilerOptions": {
+  "strictMetadataEmit": true,
+  "genDir": "compiled"
+}
+</code></pre>
+<p>This will output AOT specific files to a <code>compiled</code> folder, which you will want to create in the project root directory. The files generated in this folder should end with a <code>ngsummary.json</code> extension.</p>
+<p>However, there's no need to track these files in our Git repo, so we will want to add the following to <code>.gitignore</code>.</p>
+<pre><code class="language-typescript"># Ignore AOT generated files
+*.ngsummary.json
+</code></pre>
+<p>In addition to this, we will want to add the same to <code>.npmignore</code> to ensure summary files are not published to the NPM repository either. While you are here, you may find it useful to exclude lint files as well.</p>
+<pre><code class="language-typescript"># Ignore AOT generated files
+*.ngsummary.json
+
+# Ignore linting
+tslint.json
+</code></pre>
+<p>Feel free to make changes to <code>package.json</code> and <code>README.MD</code> at this point to reflect application specific information. However, this is entirely optional.</p>
+<h5 id="testupdates">Test Updates</h5>
+<p>At this point, you'll want to make sure the changes you have made are working as expected.</p>
+<ol>
+<li>
+<p><strong>Build the application with the typescript compiler.</strong> Run the following command in the command line: <code>npm run tsc</code>. You should now have new files in the <code>dist</code> folder.</p>
+</li>
+<li>
+<p><strong>Build the application with the AOT compiler.</strong> Run the following command in the command line: <code>npm run build</code>. You should now have new files in the <code>compiled</code> folder.</p>
+</li>
+</ol>
+<p>If you had any compilation errors, you will want to review the instructions up to this point and ensure you have followed the steps properly. If you are unable to resolve your issue, please feel free to leave a comment and I will do my best to assist you.</p>
+<h3 id="serviceparameters">Service Parameters</h3>
+<p>This section will prove useful to libraries that provide a service and require arguments from the calling application.</p>
+<h4 id="library">Library</h4>
+<p>To start with, we will have to expose a parameter for the parent application to use. If we want our library to be AOT compliant, we will need to expose this as a function in <code>index.ts</code>:</p>
+<pre><code class="language-typescript">export class SampleModule {
+  static forRoot(getConfig: Function): ModuleWithProviders {
+    return {
+      ngModule: SampleModule,
+      providers: [
+        { provide: 'config', useFactory: getConfig },
+        SampleService
+      ]
+    };
+  }
+}
+</code></pre>
+<p>This <code>config</code> value may now be accessed through dependency injection anywhere in the library. For example, in <code>sample.service.ts</code>:</p>
+<pre><code class="language-typescript">import { Inject, Injectable } from '@angular/core';
+
+@Injectable()
+export class SampleService {
+
+  constructor(@Inject('config') private config: string) {
+    console.log(this.config);
+  }
+}
+</code></pre>
+<p>In real usage, the config variable would be typed as a custom interface or class containing the configurable properties. However, I am using a string for the sake of simplicity.</p>
+<h5 id="clientapplication">Client Application</h5>
+<p>Now that we have exposed the parameters, we need to figure out how to pass configuration values from the client application. For my example, I will be generating an app using the popular CLI tool, <a href="https://github.com/angular/angular-cli">Angular CLI</a>.</p>
+<p>First, we need to package up our library so we can use it in other applications. I would suggest locally packaging the file, as opposed to publishing it to an NPM repository.</p>
+<pre><code class="language-bash">npm pack
+</code></pre>
+<p>This should generate a file called <code>[LIBRARY_NAME]-[LIBRARY_VERSION].tgz</code>. I suggest moving this file to the project directory of your client application.</p>
+<p>Now that we have the library packaged up, we can install it from the project directory of our client application using the following command:</p>
+<pre><code class="language-bash">npm install [LIBRARY_NAME]-[LIBRARY_VERSION].tgz
+</code></pre>
+<p>Once installed, the library can be imported into <code>app.module.ts</code>, the same place where we will pass our configuration arguments to the library service.</p>
+<pre><code class="language-typescript">import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
+
+import { AppComponent } from './app.component';
+import { SampleModule } from 'angular2-library-example';
+
+export function createConfig(): string {
+  return 'Config injection successful!';
+}
+
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpModule,
+    SampleModule.forRoot(createConfig)
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+</code></pre>
+<p>We can then inject the service in any component we like, such as <code>app.component.ts</code>.</p>
+<pre><code class="language-typescript">import { Component } from '@angular/core';
+import { SampleService } from 'angular2-library-example';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  title = 'app works!';
+
+  // Inject sample serivce
+  constructor(private sampleService: SampleService) {
+
+  }
+}
+</code></pre>
+<p>If all works as planned, you should be able to AOT build and run the application, receiving the following message in the browser console:</p>
+<pre><code>Config injection successful!
+</code></pre>
+<p><strong>Note:</strong> If you are using Angular CLI, you may build and run your application by issuing the <code>ng serve --aot</code> command from your project root directory.</p>
+<h3 id="publishyourlibrary">Publish Your Library</h3>
+<p>There's a high probability that you'll want to eventually publish this library to either the public NPM repository or to a private NPM repository. Luckily for you, NPM makes this very easy to do.</p>
+<h6 id="public">Public</h6>
+<p>Ensure your <code>package.json</code> file of your library is configured appropriately, and run the following in the command line:</p>
+<pre><code class="language-bash">npm publish
+</code></pre>
+<h5 id="private">Private</h5>
+<p>Append to the bottom of your <code>package.json</code> file the private repository which you wish to publish to:</p>
+<pre><code class="language-json">"publishConfig": {
+  "registry": "http://MY-REPO-URL/"
+}
+</code></pre>
+<p>And then perform the following in the command line:</p>
+<pre><code class="language-bash">npm config set registry &lt;registry url&gt;
+npm login
+npm publish
+</code></pre>
+<h3 id="summary">Summary</h3>
+<p>After reading this blog post, you should be able to accomplish the following:</p>
+<ol>
+<li>Create an Angular library using a template generator</li>
+<li>Implement an AOT compatible service in the library that accepts arguments</li>
+<li>Successfully install and use your library in any Angular application</li>
+<li>Publish the library to an NPM repository</li>
+</ol>
+<p>Thank you for reading. If you'd like to leave feedback or have any questions, please feel free to leave a comment and I'll get back to you promptly.</p>
+</div>
+            </section>
+
+
+            <footer class="post-full-footer">
+
+                <section class="author-card">
+                        <img class="author-profile-image" src="http://www.gravatar.com/avatar/7ef4fefcd783f98a0303122637bad57a?s=250&amp;d=mm&amp;r=x" alt="Dylan Barnes">
+                    <section class="author-card-content">
+                        <h4 class="author-card-name"><a href="../author/dylan/">Dylan Barnes</a></h4>
+                            <p>Read <a href="../author/dylan/">more posts</a> by this author.</p>
+                    </section>
+                </section>
+                <div class="post-full-footer-right">
+                    <a class="author-card-button" href="../author/dylan/">Read More</a>
+                </div>
+
+            </footer>
+
+            <section class="post-full-comments">
+                <div id="disqus_thread"></div>
+                <script>
+                    var disqus_config = function () {
+                        this.page.url = 'http://localhost:2368/writing-an-aot-compliant-angular-library/';
+                        this.page.identifier = 'ghost-2';
+                    };
+                    (function() {
+                        var d = document, s = d.createElement('script');
+                        s.src = 'https://dylanb124.disqus.com/embed.js';
+                        s.setAttribute('data-timestamp', +new Date());
+                        (d.head || d.body).appendChild(s);
+                    })();
+                </script>
+            </section>
+
+        </article>
+
+    </div>
+</main>
+
+<aside class="read-next outer">
+    <div class="inner">
+        <div class="read-next-feed">
+
+
+
+        </div>
+    </div>
+</aside>
+
+<div class="floating-header">
+    <div class="floating-header-logo">
+        <a href="../">
+            <span>Dylan Barnes' Blog</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">—</span>
+    <div class="floating-header-title">Writing an AOT Compliant Angular Library</div>
+    <div class="floating-header-share">
+        <div class="floating-header-share-label">Share this <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24">
+    <path d="M7.5 15.5V4a1.5 1.5 0 1 1 3 0v4.5h2a1 1 0 0 1 1 1h2a1 1 0 0 1 1 1H18a1.5 1.5 0 0 1 1.5 1.5v3.099c0 .929-.13 1.854-.385 2.748L17.5 23.5h-9c-1.5-2-5.417-8.673-5.417-8.673a1.2 1.2 0 0 1 1.76-1.605L7.5 15.5zm6-6v2m-3-3.5v3.5m6-1v2"></path>
+</svg>
+</div>
+        <a class="floating-header-share-tw" href="https://twitter.com/share?text=Writing%20an%20AOT%20Compliant%20Angular%20Library&amp;url=http://localhost:2368/writing-an-aot-compliant-angular-library/" onclick="window.open(this.href, 'share-twitter', 'width=550,height=235');return false;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"></path></svg>
+        </a>
+        <a class="floating-header-share-fb" href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:2368/writing-an-aot-compliant-angular-library/" onclick="window.open(this.href, 'share-facebook','width=580,height=296');return false;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 32 32"><path d="M19 6h5V0h-5c-3.86 0-7 3.14-7 7v3H8v6h4v16h6V16h5l1-6h-6V7c0-.542.458-1 1-1z"></path></svg>
+        </a>
+    </div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+
+
+
+
+        <footer class="site-footer outer">
+            <div class="site-footer-content inner">
+                <section class="copyright"><a href="../">Dylan Barnes' Blog</a> © 2018</section>
+                <nav class="site-footer-nav">
+                    <a href="../">Latest Posts</a>
+                    
+                    
+                    <a href="https://ghost.org" target="_blank" rel="noopener">Ghost</a>
+                </nav>
+            </div>
+        </footer>
+
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous">
+    </script>
+    <script type="text/javascript" src="../assets/js/jquery.fitvids.js?v=a5a2724bdf"></script>
+
+
+    <script>
+
+// NOTE: Scroll performance is poor in Safari
+// - this appears to be due to the events firing much more slowly in Safari.
+//   Dropping the scroll event and using only a raf loop results in smoother
+//   scrolling but continuous processing even when not scrolling
+$(document).ready(function () {
+    // Start fitVids
+    var $postContent = $(".post-full-content");
+    $postContent.fitVids();
+    // End fitVids
+
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+        lastScrollY = window.scrollY;
+        requestTick();
+    }
+
+    function onResize() {
+        lastWindowHeight = window.innerHeight;
+        lastDocumentHeight = $(document).height();
+        requestTick();
+    }
+
+    function requestTick() {
+        if (!ticking) {
+            requestAnimationFrame(update);
+        }
+        ticking = true;
+    }
+
+    function update() {
+        var trigger = title.getBoundingClientRect().top + window.scrollY;
+        var triggerOffset = title.offsetHeight + 35;
+        var progressMax = lastDocumentHeight - lastWindowHeight;
+
+        // show/hide floating header
+        if (lastScrollY >= trigger + triggerOffset) {
+            header.classList.add('floating-active');
+        } else {
+            header.classList.remove('floating-active');
+        }
+
+        progressBar.setAttribute('max', progressMax);
+        progressBar.setAttribute('value', lastScrollY);
+
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', onScroll, {passive: true});
+    window.addEventListener('resize', onResize, false);
+
+    update();
+});
+</script>
+
+
+    
+
+</body>
